@@ -1,1 +1,323 @@
-mathgame.html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشروع الرياضيات: التسوق الذكي | المعلمة روان القرني 🛒</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #dfe6e9, #b2bec3);
+            margin: 0;
+            padding: 15px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .game-card {
+            max-width: 750px;
+            margin: 10px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 4px solid #0984e3;
+        }
+        .title-banner {
+            background-color: #0984e3;
+            color: white;
+            padding: 12px;
+            border-radius: 15px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .teacher-badge {
+            background-color: #2c3e50;
+            color: #fff;
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        .info-panel {
+            display: flex;
+            justify-content: space-around;
+            background: #f1f2f6;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .shelf {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            background: #f1f2f6;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #0984e3;
+            margin-bottom: 25px;
+        }
+        .item {
+            background: white;
+            padding: 10px 5px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #ced6e0;
+        }
+        .item-icon { font-size: 2.5rem; }
+        .item-name { font-size: 0.9rem; font-weight: bold; margin: 5px 0 2px 0; }
+        .item-price {
+            background: #74b9ff;
+            padding: 3px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .blocks-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .block {
+            padding: 18px 10px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .block-label { font-size: 0.95rem; margin-bottom: 8px; opacity: 0.9; }
+        .block-value { font-size: 1.2rem; background: rgba(255,255,255,0.25); padding: 5px; border-radius: 8px; }
+        .bg-red { background-color: #ff7675; border: 2px solid #d63031; }
+        .bg-blue { background-color: #74b9ff; border: 2px solid #0984e3; }
+        .bg-green { background-color: #55efc4; border: 2px solid #00b894; color: #2d3436; }
+        
+        .quiz-zone {
+            background: #f1f2f6;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ced6e0;
+        }
+        .question { font-size: 1.25rem; font-weight: bold; margin-bottom: 15px; line-height: 1.6; }
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        input[type="number"], input[type="text"] {
+            padding: 10px;
+            font-size: 1.1rem;
+            border: 2px solid #b2bec3;
+            border-radius: 8px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 22px;
+            font-size: 1.1rem;
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background-color: #26af5f; }
+        .feedback { font-size: 1.2rem; font-weight: bold; min-height: 30px; margin-top: 5px; }
+        .correct { color: #2ecc71; }
+        .wrong { color: #e74c3c; }
+
+        .overlay-screen {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 25px;
+            border: 4px solid #0984e3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-card">
+    <!-- شاشة إدخال اسم الطالبة -->
+    <div id="start-screen" class="overlay-screen">
+        <div class="title-banner">🛒 مَشروع التَّسوق الذَّكي</div>
+        <div class="teacher-badge">👑 إعداد المعلمة: روان القرني</div>
+        <h3>مرحباً بكِ في تحدي الرياضيات السريع</h3>
+        <p>الرجاء من الطالبة المبدعة كتابة اسمها لبدء التحدي:</p>
+        <input type="text" id="student-name-input" placeholder="اكتبي اسمكِ الثلاثي هنا..." style="width: 80%; max-width: 350px; margin-bottom: 20px;"><br>
+        <button onclick="startGame()" style="background-color: #0984e3; padding: 12px 30px; font-size: 1.2rem; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">ابدئي التحدي الآن 🚀</button>
+    </div>
+
+    <!-- شاشة اللعبة الأساسية -->
+    <div id="game-screen" style="display: none;">
+        <div class="title-banner">🛒 مَشروع التَّسوق الذَّكي المطور</div>
+        <div class="teacher-badge">👑 إعداد المعلمة: روان القرني</div>
+        
+        <div class="info-panel">
+            <div style="color: #0984e3;">👩‍🎓 الطالبة: <span id="lbl-student-name">...</span></div>
+            <div style="color: #e67e22;">⏱️ الوقت المستغرق: <span id="lbl-timer">0</span> ثانية</div>
+            <div style="color: #27ae60;">⭐ النقاط: <span id="lbl-score">0</span></div>
+        </div>
+
+        <!-- رف المنتجات -->
+        <div class="shelf">
+            <div class="item"><div class="item-icon">👟</div><div class="item-name">حذاء رياضي</div><div class="item-price">120 ريال</div></div>
+            <div class="item"><div class="item-icon">🎧</div><div class="item-name">سماعة رأس</div><div class="item-price">85 ريال</div></div>
+            <div class="item"><div class="item-icon">🎒</div><div class="item-name">حقيبة فاخرة</div><div class="item-price">65 ريال</div></div>
+            <div class="item"><div class="item-icon">⌚</div><div class="item-name">ساعة يد</div><div class="item-price">90 ريال</div></div>
+            <div class="item"><div class="item-icon">🕶️</div><div class="item-name">نظارة شمسية</div><div class="item-price">45 ريال</div></div>
+            <div class="item"><div class="item-icon">🧥</div><div class="item-name">سترة شتوية</div><div class="item-price">110 ريال</div></div>
+        </div>
+
+        <div class="blocks-container">
+            <div class="block bg-red"><div class="block-label">المجموع ➕</div><div class="block-value" id="disp-total">؟ ريال</div></div>
+            <div class="block bg-blue"><div class="block-label">الباقي ➖</div><div class="block-value" id="disp-change">؟ ريال</div></div>
+            <div class="block bg-green"><div class="block-label">المبلغ المدفوع 💵</div><div class="block-value" id="disp-paid">؟ ريال</div></div>
+        </div>
+
+        <div class="quiz-zone">
+            <div class="question" id="quiz-question">جاري اختيار السلع...</div>
+            <div class="input-group">
+                <input type="number" id="ans-total" placeholder="المجموع الكلي؟">
+                <input type="number" id="ans-change" placeholder="المبلغ المتبقي؟">
+                <button onclick="verifyShopping()">تحقق من الحساب ✅</button>
+            </div>
+            <div class="feedback" id="feedback-msg"></div>
+        </div>
+    </div>
+
+    <!-- شاشة لوحة الشرف النهائية -->
+    <div id="end-screen" class="overlay-screen" style="display: none;">
+        <h1 style="color: #2ecc71;">🏆 لوحة شرف التسوق الذكي 🏆</h1>
+        <div class="teacher-badge">تحت إشراف المعلمة: روان القرني</div>
+        <div style="background: #f1f2f6; padding: 25px; border-radius: 20px; margin: 20px 0; border: 2px solid #2ecc71; font-size: 1.3rem; line-height: 2;">
+            🎉 نبارك للطالبة المبدعة المتميزة ماليًا:<br>
+            ⭐ <strong id="final-student-name" style="color: #0984e3; font-size: 1.6rem;">...</strong> ⭐<br>
+            إتمام التحدي الحسابي بنجاح بمجموع نقاط: <strong style="color: #27ae60;"><span id="final-score">0</span> نقطة</strong><br>
+            في زمن قياسي وقدره: <strong style="color: #e67e22;"><span id="final-time">0</span> ثانية</strong> ⏱️
+        </div>
+        <p>📸 *أستاذة روان، يمكنكِ تصوير هذه الشاشة لتوثيق مهارة الطالبة!*</p>
+        <button onclick="location.reload()" style="background-color: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">تحدي طالبة أخرى 🔄</button>
+    </div>
+</div>
+
+<script>
+    const inventory = [
+        { name: 'حذاء رياضي', price: 120, emoji: '👟' },
+        { name: 'سماعة رأس', price: 85, emoji: '🎧' },
+        { name: 'حقيبة فاخرة', price: 65, emoji: '🎒' },
+        { name: 'ساعة يد', price: 90, emoji: '⌚' },
+        { name: 'نظارة شمسية', price: 45, emoji: '🕶️' },
+        { name: 'سترة شتوية', price: 110, emoji: '🧥' }
+    ];
+
+    let studentName = "";
+    let score = 0;
+    let timerCount = 0;
+    let timerInterval = null;
+    let targetTotal = 0;
+    let targetPaid = 500; 
+    let targetChange = 0;
+    let roundCount = 0;
+
+    function startGame() {
+        const nameInput = document.getElementById('student-name-input').value.trim();
+        if (nameInput === "") {
+            alert("الرجاء إدخال اسم الطالبة أولاً لمباشرة التحدي! ✨");
+            return;
+        }
+        studentName = nameInput;
+        document.getElementById('lbl-student-name').innerText = studentName;
+
+        document.getElementById('start-screen').style.display = "none";
+        document.getElementById('game-screen').style.display = "block";
+
+        timerCount = 0;
+        document.getElementById('lbl-timer').innerText = timerCount;
+
+        if(timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(function() {
+            timerCount++;
+            document.getElementById('lbl-timer').innerText = timerCount;
+        }, 1000);
+
+        newRound();
+    }
+
+    function newRound() {
+        if (roundCount >= 3) {
+            endGame();
+            return;
+        }
+        roundCount++;
+
+        document.getElementById('feedback-msg').innerText = '';
+        document.getElementById('ans-total').value = '';
+        document.getElementById('ans-change').value = '';
+        document.getElementById('disp-total').innerText = '؟ ريال';
+        document.getElementById('disp-change').innerText = '؟ ريال';
+        document.getElementById('disp-paid').innerText = '؟ ريال';
+
+        let idx1 = Math.floor(Math.random() * inventory.length);
+        let idx2 = Math.floor(Math.random() * inventory.length);
+        while(idx1 === idx2) {
+            idx2 = Math.floor(Math.random() * inventory.length);
+        }
+
+        let item1 = inventory[idx1];
+        let item2 = inventory[idx2];
+
+        targetTotal = item1.price + item2.price;
+        targetChange = targetPaid - targetTotal;
+
+        document.getElementById('quiz-question').innerHTML = `السؤال (${roundCount} من 3): وضعتِ في السلة:<br><strong>(${item1.name} ${item1.emoji} و ${item2.name} ${item2.emoji})</strong><br> وسلمتِ البائع ورقة بقيمة <span style="color:#00b894;"><strong>${targetPaid} ريال</strong></span>.`;
+    }
+
+    function verifyShopping() {
+        const userTotal = parseInt(document.getElementById('ans-total').value);
+        const userChange = parseInt(document.getElementById('ans-change').value);
+        const feedback = document.getElementById('feedback-msg');
+
+        if (isNaN(userTotal) || isNaN(userChange)) {
+            feedback.className = "feedback wrong";
+            feedback.innerText = "الرجاء كتابة المجموع والباقي أولاً! 📝";
+            return;
+        }
+
+        if (userTotal === targetTotal && userChange === targetChange) {
+            feedback.className = "feedback correct";
+            feedback.innerText = "رائع جداً! إجابة صحيحة ومتقنة 🥳🎉";
+            score += 10;
+            document.getElementById('lbl-score').innerText = score;
+
+            document.getElementById('disp-total').innerText = targetTotal + " ريال";
+            document.getElementById('disp-change').innerText = targetChange + " ريال";
+            document.getElementById('disp-paid').innerText = targetPaid + " ريال";
+
+            setTimeout(newRound, 2000);
+        } else {
+            feedback.className = "feedback wrong";
+            feedback.innerText = "الحساب غير صحيح، ركّزي وأعيدي الطرح والجمع! ❌";
+        }
+    }
+
+    function endGame() {
+        if(timerInterval) clearInterval(timerInterval);
+        document.getElementById('game-screen').style.display = "none";
+        document.getElementById('end-screen').style.display = "block";
+
+        document.getElementById('final-student-name').innerText = studentName;
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('final-time').innerText = timerCount;
+    }
+</script>
+
+</body>
+</html>
